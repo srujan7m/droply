@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       size: imagekit.size || 0,
       type: imagekit.fileType || "image",
       fileURL: imagekit.url,
-      thumbnailUrl: imagekit.thumbnailUrl || null,
+  thumbnailURL: imagekit.thumbnailUrl || null,
       userId: userId,
       parentId: null, // Root level by default
       isFolder: false,
@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(newFile);
 
 } catch (error) {
+         console.error("Upload route error:", error)
          return NextResponse.json({error: "Failed to save data to db"}, {status: 500})
 }
 }
