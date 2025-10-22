@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import { SignedIn, SignedOut } from "@clerk/nextjs"
 import { Separator } from "@/components/ui/separator"
 
 export function Hero() {
@@ -25,14 +26,22 @@ export function Hero() {
               system—fast, focused, and distraction-free.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Button asChild>
-                <Link href="/files/upload">Get Started</Link>
-              </Button>
-              <Button asChild variant="outline">
-                <a href="#features" aria-label="Learn more about features">
-                  Learn more
-                </a>
-              </Button>
+              <SignedOut>
+                <Button asChild>
+                  <Link href="/sign-up">Get Started</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="/sign-in">Sign in</Link>
+                </Button>
+              </SignedOut>
+              <SignedIn>
+                <Button asChild>
+                  <Link href="/dashboard">Go to Dashboard</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="/files">Your Files</Link>
+                </Button>
+              </SignedIn>
             </div>
             <Separator className="max-w-2xl mx-auto" />
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">

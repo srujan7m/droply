@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ModeToggle } from "@/components/mode-toggle"
-import { Upload, Search, Plus } from "lucide-react"
+import { Upload, Search, Plus, LogIn, UserPlus } from "lucide-react"
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import { useState } from "react"
 
 export function AppHeader() {
@@ -48,16 +49,31 @@ export function AppHeader() {
             </form>
           </div>
           <div className="flex items-center gap-2">
-            <Button asChild>
-              <Link href="/files/upload">
-                <Upload className="mr-2 h-4 w-4" /> Upload
-              </Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/files">
-                <Plus className="mr-2 h-4 w-4" /> New
-              </Link>
-            </Button>
+            <SignedIn>
+              <Button asChild>
+                <Link href="/files/upload">
+                  <Upload className="mr-2 h-4 w-4" /> Upload
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/files">
+                  <Plus className="mr-2 h-4 w-4" /> New
+                </Link>
+              </Button>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+            <SignedOut>
+              <Button asChild variant="outline">
+                <Link href="/sign-in">
+                  <LogIn className="mr-2 h-4 w-4" /> Sign in
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link href="/sign-up">
+                  <UserPlus className="mr-2 h-4 w-4" /> Sign up
+                </Link>
+              </Button>
+            </SignedOut>
             <ModeToggle />
           </div>
         </div>

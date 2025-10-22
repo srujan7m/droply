@@ -20,9 +20,9 @@ export type FilesResponse = {
 }
 
 export function useFiles(query?: string) {
-  const key = ["/files", query || ""]
+  const key = ["/api/files", query || ""]
   const { data, error, isLoading, mutate } = useSWR<FilesResponse>(key, () =>
-    get<FilesResponse>("/files", query ? { query } : undefined),
+    get<FilesResponse>("/api/files", query ? { query } : undefined),
   )
   return {
     files: data?.items ?? [],
@@ -35,20 +35,24 @@ export function useFiles(query?: string) {
 
 export function useFile(id?: string) {
   const shouldFetch = !!id
-  const { data, error, isLoading, mutate } = useSWR<FileItem>(shouldFetch ? ["/files", id] : null, () =>
-    get<FileItem>(`/files/${id}`),
+  const { data, error, isLoading, mutate } = useSWR<FileItem>(shouldFetch ? ["/api/files", id] : null, () =>
+    get<FileItem>(`/api/files/${id}`),
   )
   return { file: data, isLoading, isError: !!error, mutate }
 }
 
 export function useDeleteFile() {
-  return useSWRMutation("/files", async (_key, { arg }: { arg: { id: string } }) => del(`/files/${arg.id}`))
+  return useSWRMutation("/api/files", async (_key, { arg }: { arg: { id: string } }) => del(`/api/files/${arg.id}`))
 }
 
 export function useUploadFiles() {
-  return useSWRMutation("/files/upload", async (_key, { arg }: { arg: { files: File[] } }) => {
+  return useSWRMutation("/api/files/upload", async (_key, { arg }: { arg: { files: File[] } }) => {
     const form = new FormData()
-    for (const f of arg.files) form.append("files", f)
-    return post("/files", form, { headers: { "Content-Type": "multipart/form-data" } })
+    // For now support single file sequential uploads; adjust later for multi-file parallel
+    for (const f of arg.files) {
+      form.set("file", f)
+      await post("/api/files/upload", form)
+    }
+    return true
   })
 }
