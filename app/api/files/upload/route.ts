@@ -12,6 +12,8 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || "",
 });
 
+export const runtime = "nodejs";
+
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
